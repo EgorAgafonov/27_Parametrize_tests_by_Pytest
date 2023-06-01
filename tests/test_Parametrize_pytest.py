@@ -1,4 +1,6 @@
 import pytest
+from api import PetFriends
+from settings import valid_email, valid_password, invalid_email, invalid_password
 
 
 # 1 Параметризация с помощью фикстуры.
@@ -102,11 +104,33 @@ import pytest
 #     print("x: {0}, y: {1}".format(x, y))
 #     assert True
 
-# 2.4 Самостоятельныйтест:
+# 2.4 Самостоятельный тест:
 
-@pytest.mark.parametrize("r", [0, 255], ids=["0_red", "255_red"])
-@pytest.mark.parametrize("g", [0, 15, 150, 255], ids=["0_green", "15_green", "150_green", "255_green"])
-@pytest.mark.parametrize("b", [0, 30, 255], ids=["0_blue", "30_blue", "255_blue"])
-def test_color_picker(r, g, b):
-    print("r: {0}, g: {1}, b: {2}".format(r, g, b))
-    assert True
+# @pytest.mark.parametrize("r", [0, 255], ids=["0_red", "255_red"])
+# @pytest.mark.parametrize("g", [0, 15, 150, 255], ids=["0_green", "15_green", "150_green", "255_green"])
+# @pytest.mark.parametrize("b", [0, 30, 255], ids=["0_blue", "30_blue", "255_blue"])
+# def test_color_picker(r, g, b):
+#     print("r: {0}, g: {1}, b: {2}".format(r, g, b))
+#     assert True
+
+                                        # 3 Параметризации для REST API тестов
+
+# 3.1
+
+pf = PetFriends()
+
+@pytest.fixture(autouse=True)
+def ket_api_key():
+   """ Проверяем, что запрос api-ключа возвращает статус 200 и в результате содержится слово key"""
+
+   # Отправляем запрос и сохраняем полученный ответ с кодом статуса в status, а текст ответа в result
+   status, pytest.key = pf.get_api_key(valid_email, valid_password)
+
+   # Сверяем полученные данные с нашими ожиданиями
+   assert status == 200
+   assert 'key' in pytest.key
+
+   yield
+
+   # Проверяем что статус ответа = 200 и имя питомца соответствует заданному
+   assert pytest.status == 200
