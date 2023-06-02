@@ -62,7 +62,7 @@ class PetFriends:
         print(result)
         return status, result
 
-    def create_pet_simple(self, auth_key: json, name: str, animal_type: str, age: float) -> json:
+    def create_pet_simple(self, auth_key: json, name: str, animal_type: str, age: str) -> json:
         """Метод отправляет на сервер базовую информацию о добавляемом питомце без фотографии.
         Возвращает код состояния ответа на запрос и данные добавленного питомца в формате JSON."""
 
@@ -75,6 +75,7 @@ class PetFriends:
             result = res.json()
         except json.decoder.JSONDecodeError:
             result = res.text
+        print(result)
         return status, result
 
     def update_pet_foto(self, auth_key: json, pet_id: str, pet_photo: str) -> json:
